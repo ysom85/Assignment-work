@@ -210,11 +210,32 @@ function App() {
       dt_txt: "2023-07-12 03:00:00",
     },
   ]);
+  
   const [city, setCity] = useState({});
-  const [name,setName] = useState("")
-const submitHandler = async(e) =>{
-  e.preventDefault();
-}
+  const [name, setName] = useState("Delhi");
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    console.log(name);
+      axios
+        .post(
+          `https://api.openweathermap.org/data/2.5/forecast?q=${name}&appid=946445c059a1538bdd9b313f555d991b`
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            setCity(response.data.city);
+            const result = response.data.list.filter(dataset);
+            setData(result);
+            console.log(data);
+          } else {
+            console.log("Error");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  };
+  
   useEffect(() => {
     let lat = 28.4900967;
     let lon = 77.0678225;
@@ -234,7 +255,7 @@ const submitHandler = async(e) =>{
     } else {
       alert("Geolocation is not supported by your browser");
     }
-    console.log(lat,lon)
+    console.log(lat, lon);
     axios
       .post(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=946445c059a1538bdd9b313f555d991b`
@@ -279,15 +300,19 @@ const submitHandler = async(e) =>{
   return (
     <div className="Background">
       <div className="mainWindow">
-      <form onSubmit={submitHandler}>
-                            <label>Enter your City name:
-                                 
-                            <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Name" />
-                            <button type="submit">ok</button>
-                            </label>
-                            </form>
-         
-          
+        <form onSubmit={submitHandler}>
+          <label>
+            Enter your City name:
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              placeholder="Name"
+            />
+            <button type="submit">ok</button>
+          </label>
+        </form>
+
         {city.name !== undefined ? (
           <div className="location">
             {city.name} {city.country}
@@ -303,7 +328,9 @@ const submitHandler = async(e) =>{
             </div>
           ) : null}
 
-          <div className="centre">{(data[0].main.temp-273).toFixed(2)} Degree C</div>
+          <div className="centre">
+            {(data[0].main.temp - 273).toFixed(2)} Degree C
+          </div>
           <div className="right">
             <div>Wind: {data[0].wind.speed} Kmph</div>
             <div>Precip: {data[0].pop} mm</div>
@@ -320,7 +347,9 @@ const submitHandler = async(e) =>{
                   src={`https://openweathermap.org/img/wn/${c.weather[0].icon}@2x.png`}
                 />
               ) : null}
-              <diV style={{ fontSize: 10 }}>{(c.main.temp - 273).toFixed(2)}</diV>
+              <diV style={{ fontSize: 10 }}>
+                {(c.main.temp - 273).toFixed(2)}
+              </diV>
             </div>
           ))}
           {/* <div className="img1">
