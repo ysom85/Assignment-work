@@ -22,7 +22,7 @@ function App() {
   const [data, setData] = useState([
     {
       dt: 1688785200,
-      main: {
+      main: {              
         temp: 304.91,
         feels_like: 310.87,
         temp_min: 304.91,
